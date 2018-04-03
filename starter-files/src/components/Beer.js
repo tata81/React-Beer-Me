@@ -17,6 +17,6 @@ class Beer extends Component {
             </div>
         );
     }
-}
+} 
 
 export default Beer;

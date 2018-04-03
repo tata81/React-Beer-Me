@@ -2,14 +2,23 @@ import React, { Component } from 'react';
 
 import Header from './Header';
 import Results from './Results';
+import Search from './Search';
 
 class App extends Component {
     state = {
-        numBeers : 10,
-        beers: []
+        beers: [],
+        loading: true
     }
     componentDidMount() {
-        this.loadBeers();
+        console.log('Mountingg');
+        const params = this.props.match.params || {};
+        const searchTerm = params.searchTerm || undefined;
+        this.loadBeers(searchTerm);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        console.log('Will recieve props');
+        this.loadBeers(nextProps.match.params.searchTerm);
     }
 
     incrementBeers = () => {
@@ -20,6 +29,7 @@ class App extends Component {
     };
 
     loadBeers = (searchTerm = "hops") => {
+        this.setState({ loading: true });
         // Check for beers in local storage
         const localStorageBeers = localStorage.getItem(`search-${searchTerm}`);
         if(localStorageBeers) {
@@ -47,8 +57,8 @@ class App extends Component {
         return (
             <div className="app_root">
                 <Header />
-                <button onClick={this.incrementBeers}>{this.state.numBeers}</button>
-                <Results beers={this.state.beers} />
+                <Search />
+                <Results beers={this.state.beers} isLoading = {this.state.loading} />
             </div>
         );
     }
